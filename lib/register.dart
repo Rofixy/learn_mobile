@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'login.dart'; // Import halaman login
+import 'home.dart'; // Import halaman Home (Pastikan ada widget HomePage)
+import 'login.dart'; // Import halaman Login (Pastikan ada widget LoginPage)
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -15,29 +16,68 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _konfirmasipasswordController =
       TextEditingController();
 
-  void _tampil() {
+  // Function to display a confirmation dialog and navigate to the home page
+  void _registerAndNavigateToHome() {
     String nama = _namalengkapController.text;
     String email = _emailController.text;
     String pass = _passwordController.text;
     String konpass = _konfirmasipasswordController.text;
 
-    showDialog(
+    if (pass == konpass &&
+        nama.isNotEmpty &&
+        email.isNotEmpty &&
+        pass.isNotEmpty) {
+      showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Data Akun"),
-            content: Text(
-                "Nama Lengkap: $nama, Email: $email, Password: $pass, Konfirmasi Password: $konpass"),
+            title: const Text("Registration Successful"),
+            content: const Text("Account has been created successfully!"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                  );
+                },
+                child: const Text("OK"),
+              ),
+            ],
           );
-        });
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text("Registration Error"),
+            content: Text(
+                "Please ensure all fields are filled and passwords match."),
+          );
+        },
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Sign Up"),
-        backgroundColor: Colors.greenAccent,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Exit',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       body: Center(
@@ -46,68 +86,117 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 20), // Jarak di atas tulisan
+              const SizedBox(height: 20),
               const Text(
-                'Create Your Account',
+                'Create Account',
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
+              const SizedBox(height: 10),
               const Text(
-                'Fill in the details to create account',
+                'Track the things to make life easy',
                 style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  fontSize: 16,
+                  color: Colors.grey,
                 ),
               ),
-              const SizedBox(height: 40), // Jarak di bawah tulisan
+              const SizedBox(height: 30),
+              // Sign up with Google button
+              ElevatedButton.icon(
+                onPressed: () {
+                  // Handle Google sign-up
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  backgroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    side: const BorderSide(color: Colors.grey),
+                  ),
+                ),
+                icon: const Icon(Icons.g_mobiledata, color: Colors.red),
+                label: const Text(
+                  'Sign up with Google',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Sign up with Facebook button
+              ElevatedButton.icon(
+                onPressed: () {
+                  // Handle Facebook sign-up
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  backgroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    side: const BorderSide(color: Colors.grey),
+                  ),
+                ),
+                icon: const Icon(Icons.facebook, color: Colors.blue),
+                label: const Text(
+                  'Sign up with Facebook',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(child: Divider(color: Colors.grey[400])),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text("or Sign up with Email"),
+                  ),
+                  Expanded(child: Divider(color: Colors.grey[400])),
+                ],
+              ),
+              const SizedBox(height: 20),
               TextField(
                 controller: _namalengkapController,
                 decoration: InputDecoration(
-                  labelText: 'Nama Lengkap',
-                  hintText: 'Masukkan nama lengkap Anda',
-                  prefixIcon: const Icon(Icons.person),
+                  labelText: 'Username',
+                  hintText: 'Enter your Username',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  hintText: 'Masukkan email Anda',
-                  prefixIcon: const Icon(Icons.email),
+                  hintText: 'Enter your email',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  hintText: 'Masukkan password Anda',
-                  prefixIcon: const Icon(Icons.lock),
+                  hintText: 'Enter your password',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               TextField(
                 controller: _konfirmasipasswordController,
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: 'Konfirmasi Password',
-                  hintText: 'Konfirmasi password Anda',
-                  prefixIcon: const Icon(Icons.lock),
+                  labelText: 'Confirm Password',
+                  hintText: 'Re-enter your password',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -115,63 +204,37 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  _tampil();
-                },
+                onPressed: _registerAndNavigateToHome,
                 style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 80),
-                  backgroundColor: Colors.greenAccent,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Color(0xFF0A00E6),
+                  minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 child: const Text('Sign Up',
-                    style: TextStyle(fontSize: 18, color: Colors.black)),
+                    style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
               const SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed: () {
-                  // Aksi signup dengan Google
-                },
-                style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                  backgroundColor: Colors.blue, // Warna tombol
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Already have an account? "),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                      );
+                    },
+                    child: const Text(
+                      'Log in here',
+                      style: TextStyle(color: Colors.blue),
+                    ),
                   ),
-                ),
-                icon: const Icon(Icons.login, color: Colors.white),
-                label: const Text(
-                  'Sign Up with Google',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  // Navigasi ke halaman login
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
-                },
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      const TextSpan(
-                        text: 'Sudah punya akun? ',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
-                      ),
-                      TextSpan(
-                        text: 'Login di sini',
-                        style:
-                            const TextStyle(color: Colors.blue, fontSize: 16),
-                      ),
-                    ],
-                  ),
-                ),
+                ],
               ),
             ],
           ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/register.dart';
+import 'home.dart'; // Import the homepage for navigation after login
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,28 +12,39 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _tampil() {
+  void _login() {
     String email = _emailController.text;
-    String pass = _passwordController.text;
+    String password = _passwordController.text;
 
-    showDialog(
+    if (email.isNotEmpty && password.isNotEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } else {
+      showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Data Akun"),
-            content: Text("Email: $email, Password: $pass"),
+            title: const Text("Login Failed"),
+            content: const Text("Please enter both email and password."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("OK"),
+              ),
+            ],
           );
-        });
+        },
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Login"),
-        backgroundColor: Colors.greenAccent,
-        automaticallyImplyLeading: false, // Menghapus tombol kembali
-      ),
       backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
@@ -41,80 +52,117 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Gambar Login
+              Image.network(
+                'https://raw.githubusercontent.com/Rofixy/image/refs/heads/main/check-list_8144374.png', // URL gambar sementara
+                height: 200,
+              ),
+              const SizedBox(height: 20),
+              // Judul Login
               const Text(
-                'Login',
+                'Login Page',
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
+              const SizedBox(height: 5),
+              // Deskripsi Login
+              const Text(
+                'Track the things to make life easy',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+              ),
               const SizedBox(height: 20),
+              // Input Email
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'Masukkan email Anda',
-                  prefixIcon: const Icon(Icons.email),
+                  labelText: 'Email or Username',
+                  hintText: 'XYZ@gmail.com',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
+              // Input Password
               TextField(
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  hintText: 'Masukkan password Anda',
-                  prefixIcon: const Icon(Icons.lock),
+                  hintText: 'Password1!',
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.visibility),
+                    onPressed: () {
+                      setState(() {
+                        _passwordController.text.isNotEmpty;
+                      });
+                    },
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  _tampil();
-                },
-                style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 80),
-                  backgroundColor: Colors.greenAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              const SizedBox(height: 8),
+              // Lupa Password
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    // Aksi untuk lupa password
+                  },
+                  child: const Text(
+                    'Forgot Password?',
+                    style: TextStyle(color: Colors.blue),
                   ),
                 ),
-                child: const Text('Login',
-                    style: TextStyle(fontSize: 18, color: Colors.black)),
               ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  // Navigasi ke halaman signup
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RegisterPage()),
-                  );
-                },
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      const TextSpan(
-                        text: 'Belum punya akun? ',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
+              const SizedBox(height: 16),
+              // Tombol Submit dan Cancel
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Tombol Submit
+                  ElevatedButton(
+                    onPressed: _login,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 40),
+                      backgroundColor: Color(0xFF0A00E6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      TextSpan(
-                        text: 'Buat di sini',
-                        style:
-                            const TextStyle(color: Colors.blue, fontSize: 16),
-                      ),
-                    ],
+                    ),
+                    child: const Text(
+                      'Submit',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
                   ),
-                ),
+                  // Tombol Cancel
+                  OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Kembali ke halaman sebelumnya
+                    },
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 40),
+                      side: const BorderSide(color: Colors.grey),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
